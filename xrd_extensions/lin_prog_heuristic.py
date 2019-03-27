@@ -1,5 +1,6 @@
 # linear programming heuristic
 
+
 from scipy.optimize import linprog
 
 c = [-1, 4]
