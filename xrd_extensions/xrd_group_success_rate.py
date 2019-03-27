@@ -6,6 +6,7 @@
 # C_curr = chains current group of users is connected to; 1D array
 # g = group size 
 
+
 import math
 import random 
 
