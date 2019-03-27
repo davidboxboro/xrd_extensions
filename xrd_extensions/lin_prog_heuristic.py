@@ -3,10 +3,14 @@
 
 from scipy.optimize import linprog
 
-c = [-1, 4]
-A = [[-3, 1], [1, 2]]
-b = [6, 4]
-x0_bounds = (None, None)
-x1_bounds = (-3, None)
+num_users = 5
+num_serv = 10
+num_var = num_users * (num_users-1) / 2 * num_serv
 
-res = linprog(c, A_ub=A, b_ub=b, bounds=(x0_bounds, x1_bounds), options={"disp": True})
+fnc = [1 for i in range(num_var)]
+A = []
+b = []
+
+res = linprog(fnc, A_ub=A, b_ub=b, bounds=(0, 1), options={"disp": True})
+
+print(res)
