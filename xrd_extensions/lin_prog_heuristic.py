@@ -4,7 +4,7 @@ from scipy.optimize import linprog
 
 g = 3
 num_users = 10
-num_serv = 5
+num_serv = 100
 num_pairs = num_users * (num_users-1) / 2
 num_var = num_pairs * num_serv
 
@@ -18,15 +18,26 @@ for i in range(num_pairs):
         A_ele[i*num_serv+k] = -1
     A.append(A_ele) 
 
-#for i in range(0, num_serv):
-#    A_ele = [0 for k in range(num_var)]
-#    for j in range(num_pairs):
-#        A_ele[j*num_serv+i] = 1
-#    A.append(A_ele)
+for i in range(1, num_serv):
+    A_ele = [0 for k in range(num_var)]
+    for j in range(num_pairs):
+        A_ele[j*num_serv] = -1
+        A_ele[j*num_serv+i] = 1
+    A.append(A_ele)
+
+for i in range(1, num_serv):
+    A_ele = [0 for k in range(num_var)]
+    for j in range(num_pairs):
+        A_ele[j*num_serv] = 1
+        A_ele[j*num_serv+i] = -1
+    A.append(A_ele)
+
 
 b = [-g+1 for i in range(num_pairs)]
-#for i in range(0, num_serv):
-#    b.append(19)
+for i in range(1, num_serv):
+    b.append(0)
+for i in range(1, num_serv):
+    b.append(0)
 
 res = linprog(fnc, A_ub=A, b_ub=b, bounds=(0, 1), options={"disp": True})
 
