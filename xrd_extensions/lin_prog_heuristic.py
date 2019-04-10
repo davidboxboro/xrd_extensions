@@ -47,20 +47,23 @@ for i in range(num_users):
     for j in range(i+1, num_users):
         conv_arr.append([i,j])
 
-print conv_arr
+#print conv_arr
 
 C_all = []
 for i in range(num_users):
     C_all.append([])
 
 print res.x
-print len(res.x)
+#print len(res.x)
 
 for i in range(num_pairs):
+    print
     for j in range(num_serv):
-        if res.x[i*num_serv+j] == 1:
+        print res.x[i*num_serv+j]
+        if round(res.x[i*num_serv+j]) == 1:
             a = conv_arr[i][0]
             b = conv_arr[i][1]
+            print "yes", a, b
             C_all[a].append(j)
             C_all[b].append(j)
 
