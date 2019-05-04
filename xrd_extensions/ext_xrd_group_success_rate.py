@@ -9,10 +9,12 @@
 import math
 import random 
 
-n = 40
+g = 5
+I = 2
+n = 50
 N = 5000000 # users are numbered 0 to N-1, inclusive; user u belongs to group u % (l+1)
-l = int(math.ceil(math.sqrt(2*n+0.25) - 0.5))
-g = 5 
+l = int(math.ceil(math.sqrt(2*n*I+I*I/4.0) - I/2.0)) # has to be multiple of I
+print l
 
 print "\n%s users, %s chains, %s messages per user\n" % (N, n, l) 
 print "Chains each group sends messages to:"
@@ -26,14 +28,15 @@ C_all.append(C_curr)
 
 print " Group 0: %s" % (C_curr)
 
-# Rows 1, 2, ..., l of C_all
-for i in range(1, l+1): # i goes from 1 to l, inclusive
+# Rows 1, 2, ..., l/I of C_all
+for i in range(1, l/I+1): # i goes from 1 to l/I, inclusive
     C_curr = []
 
     for j in range(0, i): # j goes from 0 to i-1, inclusive
-        C_curr.append(C_all[j][i-1] % n)
+        for a in range(0, I):
+            C_curr.append(C_all[j][I*(i-1)+a] % n)
 
-    for k in range(1, l-i+1):
+    for k in range(1, l-2*i+1):
         C_curr.append((C_all[i-1][l-1] + k) % n)
 
     print " Group %s: %s" % (i, C_curr)
@@ -41,10 +44,10 @@ for i in range(1, l+1): # i goes from 1 to l, inclusive
     C_all.append(C_curr)
 
 # Function to test if two sets intersect
-def common_elm(a, b): 
+def x_common_elm(a, b, x): 
     a_set = set(a) 
     b_set = set(b) 
-    if (a_set & b_set): 
+    if (len(a_set.intersection(b_set)) >= x): 
         return True 
     else: 
         return False
@@ -52,8 +55,8 @@ def common_elm(a, b):
 # Check if C_all indeed leads to all groups intersecting
 for i in range(len(C_all)):
     for j in range(0, i):
-        if not common_elm(C_all[i], C_all[j]):
-            print "\nAlgorithm FAILED, %s and %s do not intersect!\n" % (i, j) 
+        if not x_common_elm(C_all[i], C_all[j], I):
+            print "\nAlgorithm FAILED, %s and %s do not intersect %s times!\n" % (i, j, I) 
             exit()
 
 
@@ -73,11 +76,11 @@ def group_chat_possible():
     intersections = []
     for i in range(len(G)):
         for j in range(0, i):
-            set1 = set(C_all[G[i] % (l+1)])
-            set2 = set(C_all[G[j] % (l+1)])
+            set1 = set(C_all[G[i] % (l/I+1)])
+            set2 = set(C_all[G[j] % (l/I+1)])
             intersections.append(list(set1 & set2))
 
-#    print "\nIntersections: %s" % intersections
+    print "\nIntersections: %s" % intersections
 
     arr = [[]]
     for intersection in intersections:
